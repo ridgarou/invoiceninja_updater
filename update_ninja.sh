@@ -96,18 +96,18 @@ case $update_required in
 
 	printf "*******************************************************************************\n"
         printf '%s - Removing downloaded ZIP file "%s" ...\n' "$(date)" "$ninja_zip" 
-		printf '%s - Removing temporary folder "%s" ...\n' "$(date)" "$tempdir"
+	printf '%s - Removing temporary folder "%s" ...\n' "$(date)" "$tempdir"
         sudo rm -rf "$tempdir/"
 
 	printf "*******************************************************************************\n"
         printf '%s - Running update migration commands (%s)...\n\n' "$(date)" "$update_url"
-        case $(grep -c "UPDATE_SECRET" "$ninja_env") in
+        case $(sudo grep -c "UPDATE_SECRET" "$ninja_env") in
         0)
-            wget -q --spider "$update_url"
+            sudo wget -q --spider "$update_url"
             ;;
         1)
             update_key="$(grep -oP '(?<=UPDATE_SECRET=).*' "$ninja_env")"
-            wget -q --spider "$update_url"?secret="$update_key"
+            sudo wget -q --spider "$update_url"?secret="$update_key"
             ;;
         esac
 
