@@ -2,7 +2,7 @@
 #Invoice Ninja Self-Hosted Update
 #PLEASE SEE THE README AT https://pastebin.com/nwcSH0TH
 
-printf '-------------------------------------------------------------------------------\n'
+printf "*******************************************************************************\n"
 printf '%s - Begin Invoice Ninja update.\n' "$(date)"
 
 #SET INVOICE NINJA INSTALL AND STORAGE PATHS
@@ -17,12 +17,12 @@ ninja_storage="$ninja_home/storage"
 versiontxt="$ninja_storage/version.txt"
 ninja_installed="$(cat "$versiontxt")"
 
-printf '-------------------------------------------------------------------------------\n'
+printf "*******************************************************************************\n"
 printf '%s - Invoice Ninja v%s found installed.\n' "$(date)" "$ninja_installed"
 
 ninja_current="$((wget -qO- https://invoiceninja.org/index.php) | (grep -oP 'Download Version \K[0-9]+\.[0-9]+(\.[0-9]+)'))"
 
-printf '-------------------------------------------------------------------------------\n'
+printf "*******************************************************************************\n"
 printf '%s - Invoice Ninja v%s found to download.\n' "$(date)" "$ninja_current"
 
 #SEE IF AN UPDATE IS REQUIRED
@@ -50,12 +50,12 @@ done
 #--------------------------------------------------------
 case $update_required in
     no)
-	printf '-------------------------------------------------------------------------------\n'
+	printf "*******************************************************************************\n"
         printf '%s - No update required.\n' "$(date)" 
-		printf '-------------------------------------------------------------------------------\n'
+	printf "*******************************************************************************\n"
         ;;
     yes)
-	printf '-------------------------------------------------------------------------------\n'
+	printf "*******************************************************************************\n"
         printf '%s - Invoice Ninja will be updated from v%s to v%s.\n' "$(date)" "$ninja_installed" "$ninja_current"
 
         #Set remaining variables
@@ -71,35 +71,35 @@ case $update_required in
         storage_owner="$(stat -c "%U" "$ninja_storage")"
         storage_group="$(stat -c "%G" "$ninja_storage")"
 		
-	printf '-------------------------------------------------------------------------------\n'
+	printf "*******************************************************************************\n"
         printf '%s - Deleting file "%s" (if it exists)...\n' "$(date)" "$ninja_home/bootstrap/cache/compiled.php"
         set +e
         sudo rm "$ninja_home/bootstrap/cache/compiled.php"
         set -e
 
-	printf '-------------------------------------------------------------------------------\n'
+	printf "*******************************************************************************\n"
         printf '%s - Downloading Invoice Ninja v%s archive "%s" ...\n\n' "$(date)" "$ninja_current" "$ninja_url"
         sudo wget -P "$tempdir/" "$ninja_url"
 
-	printf '-------------------------------------------------------------------------------\n'
+	printf "*******************************************************************************\n"
         printf '%s - Extracting to temporary folder "%s" ...\n' "$(date)" "$tempdir"
         sudo unzip -q "$ninja_zip" -d "$tempdir/"
 
-	printf '-------------------------------------------------------------------------------\n'
+	printf "*******************************************************************************\n"
         printf '%s - Syncing to install folder "%s" ...\n\n' "$(date)" "$ninja_home"
         sudo rsync -tr --stats "$ninja_temp/" "$ninja_home/"
 
-	printf '-------------------------------------------------------------------------------\n'
+	printf "*******************************************************************************\n"
         printf '%s - Resetting permissions for "%s" ...\n' "$(date)" "$ninja_storage"
         sudo chown -R "$storage_owner":"$storage_group" "$ninja_storage/"
         sudo chmod -R 775 "$ninja_storage/"
 
-	printf '-------------------------------------------------------------------------------\n'
+	printf "*******************************************************************************\n"
         printf '%s - Removing downloaded ZIP file "%s" ...\n' "$(date)" "$ninja_zip" 
-	printf '%s - Removing temporary folder "%s" ...\n' "$(date)" "$tempdir"
+		printf '%s - Removing temporary folder "%s" ...\n' "$(date)" "$tempdir"
         sudo rm -rf "$tempdir/"
 
-	printf '-------------------------------------------------------------------------------\n'
+	printf "*******************************************************************************\n"
         printf '%s - Running update migration commands (%s)...\n\n' "$(date)" "$update_url"
         case $(grep -c "UPDATE_SECRET" "$ninja_env") in
         0)
@@ -111,8 +111,8 @@ case $update_required in
             ;;
         esac
 
-	printf '-------------------------------------------------------------------------------\n'
+	printf "*******************************************************************************\n"
         printf '%s - Invoice Ninja successfully updated to v%s!\n\n' "$(date)" "$ninja_current"
-	printf '-------------------------------------------------------------------------------\n'
+	printf "*******************************************************************************\n"
         ;;
 esac
